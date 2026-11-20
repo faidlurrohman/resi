@@ -38,7 +38,7 @@ app.get("/resi/:courier/:number", async (c) => {
   }
 
   try {
-    const csrf = await getCSRFData(number);
+    const csrf = await getCSRFData(number, courier);
     const timers = await encryptTimers(number);
     const trackingData = await getResiTracking(number, csrf, timers, courier);
 

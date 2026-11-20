@@ -1,18 +1,17 @@
 {
   "name": "resi",
   "version": "1.0.0",
-  "main": "index.js",
   "type": "module",
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
-    "dev": "vercel dev"
+    "dev": "node index.js"
   },
   "keywords": [
     "resi",
     "pengiriman"
   ],
-  "engines": {
-    "node": "20.x"
-  },
   "author": "Hamburger",
   "license": "MIT",
   "description": "Pengecekan resi pengiriman",
