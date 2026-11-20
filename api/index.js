@@ -1,10 +1,20 @@
 import { Hono } from "hono";
-import { serve } from "@hono/node-server";
-import { getCSRFData, encryptTimers, getResiTracking } from "./function.js";
+import { handle } from "@hono/vercel";
+import { getCSRFData, encryptTimers, getResiTracking } from "../function.js";
 
 const app = new Hono();
 
-app.get("/resi/:courier/:number", async (c) => {
+app.use("*", async (c, next) => {
+  c.header("Access-Control-Allow-Origin", "https://primatrans.id");
+  c.header("Access-Control-Allow-Methods", "GET, OPTIONS");
+  c.header("Access-Control-Allow-Headers", "Content-Type");
+  if (c.req.method === "OPTIONS") {
+    return c.text("", 204);
+  }
+  await next();
+});
+
+app.get("/api/resi/:courier/:number", async (c) => {
   const courier = c.req.param("courier").toUpperCase();
   const number = c.req.param("number");
 
@@ -46,7 +56,7 @@ app.get("/resi/:courier/:number", async (c) => {
   }
 });
 
-app.get("/", (c) => {
+app.get("/api", (c) => {
   return c.json({
     status: 200,
     author: "Hamburger",
@@ -55,11 +65,7 @@ app.get("/", (c) => {
   });
 });
 
-app.notFound((c) =>
-  c.json({ error: "Halaman yang kamu akses tidak ada" }, 404),
-);
-app.onError((c) => c.json({ error: "Terjadi kesalahan pada server" }, 500));
-
-const port = 3000;
-console.log(`Server running on http://localhost:${port}`);
-serve({ fetch: app.fetch, port });
+// Export handler untuk Vercel
+export const GET = handle(app);
+export const POST = handle(app); // Jika nanti butuh POST
+export const OPTIONS = handle(app);
