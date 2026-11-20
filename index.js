@@ -1,20 +1,17 @@
 import { Hono } from "hono";
-import { handle } from "@hono/vercel";
-import { getCSRFData, encryptTimers, getResiTracking } from "../function.js";
+import { cors } from "hono/cors";
+import { getCSRFData, encryptTimers, getResiTracking } from "./function.js";
 
 const app = new Hono();
+app.use(
+  "*",
+  cors({
+    origin: ["https://primatrans.id", "http://localhost:3000"],
+    allowMethods: ["GET", "OPTIONS"],
+  }),
+);
 
-app.use("*", async (c, next) => {
-  c.header("Access-Control-Allow-Origin", "https://primatrans.id");
-  c.header("Access-Control-Allow-Methods", "GET, OPTIONS");
-  c.header("Access-Control-Allow-Headers", "Content-Type");
-  if (c.req.method === "OPTIONS") {
-    return c.text("", 204);
-  }
-  await next();
-});
-
-app.get("/api/resi/:courier/:number", async (c) => {
+app.get("/resi/:courier/:number", async (c) => {
   const courier = c.req.param("courier").toUpperCase();
   const number = c.req.param("number");
 
@@ -56,7 +53,7 @@ app.get("/api/resi/:courier/:number", async (c) => {
   }
 });
 
-app.get("/api", (c) => {
+app.get("/", (c) => {
   return c.json({
     status: 200,
     author: "Hamburger",
@@ -65,7 +62,4 @@ app.get("/api", (c) => {
   });
 });
 
-// Export handler untuk Vercel
-export const GET = handle(app);
-export const POST = handle(app); // Jika nanti butuh POST
-export const OPTIONS = handle(app);
+export default app;

@@ -4,24 +4,21 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node api/index.js",
-    "dev": "nodemon api/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vercel dev"
   },
   "keywords": [
     "resi",
     "pengiriman"
   ],
+  "engines": {
+    "node": "20.x"
+  },
   "author": "Hamburger",
-  "license": "ISC",
+  "license": "MIT",
   "description": "Pengecekan resi pengiriman",
   "dependencies": {
-    "@hono/vercel": "^1.0.1",
     "axios": "^1.7.9",
     "cheerio": "^1.0.0",
     "hono": "^4.6.17"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.7"
   }
 }
